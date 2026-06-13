@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para o Meu Amor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            min-height: 100vh;
+            width: 100vw;
+            background-color: #5c4033;
+            background-image: repeating-linear-gradient(
+                to right,
+                #5c4033,
+                #5c4033 40px,
+                #4a332a 40px,
+                #4a332a 80px
+            );
+            display: flex;
+            flex-direction: column; /* Organiza em coluna para empilhar as folhas */
+            align-items: center;
+            justify-content: flex-start; /* Começa do topo */
+            font-family: 'Caveat', cursive;
+            overflow-x: hidden;
+            overflow-y: auto;
+            color: #2c3e50;
+            padding: 50px 20px;
+            gap: 50px; /* Espaço entre as folhas */
+        }
+
+        /* --- TELA DE SENHA --- */
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #5c4033;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
+        }
+        .password-box {
+            background: #fdfbf7;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 2px solid #d63031;
+        }
+        .password-box h2 { font-size: 3rem; color: #d63031; margin-bottom: 20px; }
+        .password-box input {
+            width: 100%;
+            padding: 10px;
+            font-size: 2rem;
+            font-family: 'Caveat', cursive;
+            border: 2px solid #2d3436;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            outline: none;
+        }
+        #btn-entrar { background-color: #ffeaa7; width: 100%; transition: transform 0.2s; }
+        #btn-entrar:hover { transform: scale(1.05); }
+        #msg-erro { color: #d63031; font-size: 1.5rem; margin-top: 15px; display: none; }
+        #msg-dica { color: #0984e3; font-size: 1.4rem; margin-top: 10px; display: none; }
+
+        /* --- PRIMEIRA FOLHA (O PEDIDO) --- */
+        .folha-caderno {
+            background-color: #fdfbf7;
+            background-image: linear-gradient(rgba(0, 0, 255, 0.08) 1px, transparent 1px);
+            background-size: 100% 35px;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 80vh;
+            padding: 40px;
+            position: relative;
+            transform: rotate(-1deg);
+            box-shadow: 10px 15px 25px rgba(0,0,0,0.4);
+            border-radius: 2px 255px 3px 255px / 255px 5px 225px 3px;
+            border: 1px solid #dcdcdc;
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+        }
+
+        .folha-caderno::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%) rotate(3deg);
+            width: 150px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 2px;
+            backdrop-filter: blur(3px);
+        }
+
+        /* Estilo para centralizar o título na folha */
+        .cabecalho-centro {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 30px;
+            z-index: 3;
+        }
+        .cabecalho-centro h1 { font-size: 4.5rem; color: #d63031; line-height: 1; margin-bottom: 10px; }
+        .cabecalho-centro p { font-size: 2.2rem; color: #0984e3; margin: 0; }
+        .texto-intro { font-size: 1.8rem; color: #34495e; margin-top: 25px; line-height: 1.4; max-width: 850px; margin-left: auto; margin-right: auto; }
+        .destaque-vermelho { color: #d63031; font-weight: bold; }
+
+        /* Layout de Duas Colunas da primeira folha */
+        .layout-duplo {
+            display: flex;
+            flex-wrap: wrap;
+            height: 100%;
+            width: 100%;
+            gap: 40px;
+        }
+
+        .lado-esquerdo {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 3px dashed #b2bec3;
+            padding-right: 30px;
+        }
+
+        .lado-esquerdo h1 { 
+            font-size: 3.5rem; 
+            color: #d63031; 
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+        
+        .lado-esquerdo p { 
+            font-size: 1.8rem; 
+            color: #0984e3; 
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .btn-group {
+            position: relative;
+            min-height: 100px; 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1.8rem;
+            font-family: 'Caveat', cursive;
+            font-weight: bold;
+            cursor: pointer;
+            background: transparent;
+            border: 3px solid #2d3436;
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+        }
+
+        #btn-sim { 
+            background-color: #ffeaa7; 
+            color: #2d3436; 
+            z-index: 5; 
+            transition: all 0.2s;
+        }
+        #btn-sim:hover { transform: scale(1.05) rotate(2deg); }
+
+        #btn-nao { 
+            color: #2d3436; 
+            transition: left 0.1s ease, top 0.1s ease; 
+        }
+
+        .lado-direito {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .carta {
+            background-color: #fff9e6;
+            border: 2px solid #e1b12c;
+            border-radius: 5px;
+            padding: 30px;
+            width: 90%;
+            min-height: 250px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+            transform: rotate(2deg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+
+        .carta:hover { transform: scale(1.02) rotate(0deg); }
+
+        .carta-texto {
+            font-size: 2.2rem;
+            color: #d63031;
+            font-weight: bold;
+            pointer-events: none;
+        }
+
+        .dica {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #636e72;
+            transform: rotate(-3deg);
+        }
+
+        /* --- SEGUNDA FOLHA (A DECLARAÇÃO) --- */
+        .folha-declaracao {
+            background-color: #fdfaf4;
+            width: 100%;
+            max-width: 1100px; 
+            padding: 50px 40px;
+            position: relative;
+            transform: rotate(1.5deg); /* Rotação pro lado oposto */
+            box-shadow: 8px 12px 20px rgba(0,0,0,0.3);
+            border-radius: 5px 255px 10px 255px / 255px 15px 225px 10px;
+            border: 1px solid #e0dcd3;
+            z-index: 1;
+        }
+
+        /* Durex colado de lado na segunda folha */
+        .folha-declaracao::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -20px;
+            transform: rotate(45deg);
+            width: 100px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 2px;
+            backdrop-filter: blur(2px);
+        }
+
+        .folha-declaracao h2 {
+            font-size: 3rem;
+            color: #d63031;
+            margin-bottom: 25px;
+        }
+
+        .folha-declaracao p {
+            font-size: 1.9rem;
+            color: #34495e;
+            line-height: 1.5;
+            text-indent: 40px; /* Parágrafo com recuo estilo redação */
+            margin-bottom: 15px;
+        }
+
+        .assinatura {
+            text-align: right;
+            margin-top: 40px;
+            font-size: 2.2rem;
+            color: #0984e3;
+            font-weight: bold;
+        }
+
+        /* --- QUADROS NA PAREDE (FUNDO) --- */
+        .quadro-foto {
+            position: fixed;
+            width: 180px;
+            background: #fff;
+            padding: 10px 10px 15px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border: 1px solid #ddd;
+            z-index: 0; /* Atrás das folhas */
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quadro-foto img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border: 1px solid #eee;
+            background-color: #eee; /* Cor de fundo caso não tenha imagem */
+        }
+
+        .legenda-foto {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 1.3rem;
+            color: #333;
+        }
+
+        .quadro-foto:hover {
+            transform: scale(1.1) !important;
+            z-index: 10;
+        }
+
+        /* Posicionamento dos quadros */
+        .q-esq-1 { left: 2%; top: 10%; transform: rotate(-8deg); }
+        .q-esq-2 { left: 3%; top: 55%; transform: rotate(5deg); }
+        .q-dir-1 { right: 2%; top: 15%; transform: rotate(6deg); }
+        .q-dir-2 { right: 3%; top: 60%; transform: rotate(-4deg); }
+
+        /* Esconde quadros em telas muito pequenas para não cobrir o texto */
+        @media (max-width: 1250px) {
+            .quadro-foto {
+                width: 120px;
+            }
+            .quadro-foto img { height: 100px; }
+        }
+
+        @media (max-width: 1000px) {
+            .quadro-foto { display: none; }
+        }
+
+        /* Tela de Sucesso */
+        .tela-sucesso {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            min-height: 50vh;
+        }
+
+        .tela-sucesso h1 { font-size: 5rem; color: #d63031; }
+        .tela-sucesso p { font-size: 2.5rem; color: #0984e3; margin-top: 20px; }
+
+        /* --- TERCEIRA FOLHA (MÚSICA E FRASES) --- */
+        .folha-interativa {
+            background-color: #fffdf9;
+            width: 100%;
+            max-width: 900px;
+            padding: 50px;
+            position: relative;
+            transform: rotate(-1.5deg);
+            box-shadow: 12px 15px 30px rgba(0,0,0,0.35);
+            border-radius: 3px;
+            border: 1px solid #f0f0f0;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .folha-interativa h2 { margin-bottom: 30px; }
+
+        #btn-musica {
+            background-color: #ffeaa7;
+            border: 3px solid #d63031;
+            color: #d63031;
+            padding: 15px 40px;
+            margin-bottom: 40px;
+            cursor: pointer;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+        #btn-musica:hover {
+            transform: scale(1.05) rotate(1deg);
+            background-color: #fab1a0;
+        }
+
+        .caixa-frases {
+            background: rgba(214, 48, 49, 0.05);
+            border: 2px dashed #d63031;
+            padding: 30px;
+            border-radius: 15px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #frase-dinamica {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            transition: opacity 0.8s ease;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 768px) {
+            .lado-esquerdo { border-right: none; border-bottom: 3px dashed #b2bec3; padding-right: 0; padding-bottom: 30px; }
+            .folha-caderno, .folha-declaracao, .folha-interativa, .pagina-interna-livro { padding: 20px; }
+            .folha-livro { padding: 0; }
+            .folha-declaracao p, .folha-interativa #frase-dinamica, .folha-livro p { font-size: 1.6rem; }
+        }
+
+        /* --- QUARTA FOLHA (LIVRO) --- */
+        .folha-livro {
+            background-color: #fffdf9;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            transform: rotate(0.5deg);
+            box-shadow: 15px 20px 35px rgba(0,0,0,0.4);
+            border-radius: 5px;
+            border: 1px solid #f0f0f0;
+            z-index: 1;
+            text-align: justify;
+            margin-top: 20px;
+            overflow: hidden;
+            perspective: 2000px; /* Perspectiva para efeitos 3D */
+            opacity: 0; /* Começa invisível para a animação */
+            transform: scale(0.9) rotateY(-15deg);
+            transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Classe para disparar a animação de abertura */
+        .folha-livro.aberto {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg);
+        }
+
+        /* --- SELO DE FOTO NO CANTO --- */
+        .selo-foto {
+            position: absolute;
+            top: 15px;
+            left: 30px;
+            width: 85px;
+            height: 85px;
+            background: #fff;
+            border: 4px double #d63031; /* Borda estilo selo vintage */
+            border-radius: 50%;
+            padding: 3px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 20;
+            transform: rotate(-12deg);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .selo-foto img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background-color: #f1f1f1; }
+        .selo-foto::after { content: '❤'; position: absolute; bottom: 2px; right: 20px; font-size: 10px; color: #d63031; }
+
+        #conteudo-livro { width: 100%; }
+        .livro-slider {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            gap: 60px; /* Separação física entre as páginas */
+        }
+        .pagina-interna-livro {
+            flex: 0 0 100%;
+            padding: 60px 50px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            background: #fffdf9;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1); /* Sombra individual da folha */
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* Ornamentos românticos nos cantos das páginas */
+        .pagina-interna-livro::before {
+            content: '❦';
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            font-size: 2.5rem;
+            color: rgba(214, 48, 49, 0.1);
+        }
+
+        .capa-livro {
+            background-color: #fdfbf7;
+            border-left: 15px solid #d63031; /* Efeito de lombada do livro */
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .capa-livro h1 { font-size: 5rem !important; margin-bottom: 10px; }
+
+        .coracao-capa {
+            font-size: 5rem;
+            margin-top: 20px;
+            animation: pulse-coracao 1.5s infinite;
+        }
+        @keyframes pulse-coracao {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pagina-centralizada {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .pagina-centralizada p {
+            text-indent: 0 !important;
+            font-size: 3rem !important;
+            color: #d63031;
+        }
+
+        .folha-livro h2 {
+            text-align: center;
+            font-size: 3.2rem;
+            color: #d63031;
+            margin-bottom: 30px;
+        }
+
+        .folha-livro p {
+            font-size: 1.9rem;
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-indent: 50px; /* Recuo de parágrafo estilo livro */
+        }
+
+        /* --- ÁLBUM DE FOTOS INTERATIVO --- */
+        .album-container {
+            width: 100%;
+            max-width: 650px;
+            margin: 30px auto;
+            position: relative;
+            background: #fff;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .album-slider {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .album-item {
+            min-width: 100%;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .album-item img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+        .controles-album {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .btn-album {
+            pointer-events: auto;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #2d3436 !important;
+            width: 45px !important;
+            height: 45px !important;
+            padding: 0 !important;
+            border-radius: 50% !important;
+            cursor: pointer;
+            font-size: 1.5rem !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .btn-album:hover { background: #ffeaa7 !important; }
+
+        .contador-container {
+            margin-bottom: 25px;
+            padding: 10px;
+        }
+        #dias-contagem {
+            font-size: 3.5rem;
+            color: #d63031;
+            font-weight: bold;
+            display: block;
+            margin: 5px 0;
+        }
+        .btn-resposta {
+            font-size: 1.6rem;
+            padding: 5px 25px;
+            margin-top: 15px;
+            background-color: #ffeaa7;
+            border: 2px solid #d63031;
+            color: #d63031;
+            transition: transform 0.2s;
+        }
+        .btn-resposta:hover { transform: scale(1.1) rotate(2deg); }
+
+        /* --- POPUP PERSONALIZADO --- */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            backdrop-filter: blur(4px);
+        }
+        .popup-card {
+            background: #fffdf9;
+            padding: 40px;
+            border-radius: 30px;
+            border: 4px dashed #d63031;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            max-width: 400px;
+            transform: scale(0.5);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .popup-overlay.active { display: flex; }
+        .popup-overlay.active .popup-card { transform: scale(1); }
+
+        /* --- QUINTA FOLHA (TEXTO FINAL) --- */
+        .folha-texto-final {
+            background-color: #fdfbf7;
+            background-image: linear-gradient(rgba(0, 0, 255, 0.05) 1px, transparent 1px);
+            background-size: 100% 35px;
+            width: 100%;
+            max-width: 900px;
+            padding: 60px;
+            position: relative;
+            transform: rotate(-1.2deg);
+            box-shadow: 12px 18px 35px rgba(0,0,0,0.3);
+            border-radius: 3px;
+            border: 1px solid #efefef;
+            border-left: 30px solid transparent;
+            border-image: radial-gradient(#d63031 2px, transparent 2px) 0 0 0 100% / 15px repeat;
+            z-index: 1;
+        }
+        
+        /* Fita adesiva decorativa no topo */
+        .folha-texto-final::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 150px;
+            height: 45px;
+            background: rgba(214, 48, 49, 0.15);
+            border: 1px dashed rgba(214, 48, 49, 0.3);
+            backdrop-filter: blur(2px);
+            z-index: 2;
+        }
+
+        .folha-texto-final h2 { font-size: 3.5rem; color: #d63031; text-align: center; margin-bottom: 30px; }
+        .folha-texto-final p { font-size: 2.1rem; line-height: 1.5; margin-bottom: 25px; text-indent: 50px; color: #2c3e50; }
+        .folha-texto-final .assinatura-final { text-align: right; margin-top: 50px; font-size: 2.8rem; color: #d63031; font-weight: bold; }
+        
+        .detalhe-decorativo {
+            position: absolute;
+            font-size: 3rem;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="modo-madeira" style="overflow: hidden;">
+
+    <!-- Tela de Senha -->
+    <div id="password-overlay">
+        <div class="password-box">
+            <h2>Acesso Restrito ❤️</h2>
+            <p style="font-size: 1.8rem; margin-bottom: 15px;">Insira a nossa data especial para entrar:</p>
+            <input type="text" id="password-input" placeholder="DD/MM" maxlength="5">
+            <button onclick="verificarSenha()" id="btn-entrar">Verificar</button>
+            <p id="msg-erro">Data incorreta, tente novamente... ❌</p>
+            <p id="msg-dica">Dica: Dia que te entreguei nossa aliança</p>
+        </div>
+    </div>
+
+    <!-- Quadros de fotos nas laterais -->
+    <div class="quadro-foto q-esq-1">
+        <img src="imagens/RK.jpg" alt="Momento 1">
+        <p class="legenda-foto">Nossa primeira foto ❤️</p>
+    </div>
+    <div class="quadro-foto q-esq-2">
+        <img src="sua-foto2.jpg" alt="Momento 2">
+        <p class="legenda-foto">Um dia especial ✨</p>
+    </div>
+    <div class="quadro-foto q-dir-1">
+        <img src="sua-foto3.jpg" alt="Momento 3">
+        <p class="legenda-foto">Amo seu sorriso 😊</p>
+    </div>
+    <div class="quadro-foto q-dir-2">
+        <img src="sua-foto4.jpg" alt="Momento 4">
+        <p class="legenda-foto">Para sempre... ♾️</p>
+    </div>
+
+    <div class="folha-caderno">
+        <div class="cabecalho-centro">
+            <h1>Feliz Dia dos Namorados</h1>
+            <p>Minha namorada perfeita ♥</p>
+            <div class="texto-intro">
+                <p>Meu amor, preparei esse presente pra você com muito carinho, pois acredito que você vai gostar muitão (chega a ser estranho escrever tão certinho já que nunca paramos pra falar tão formalmente juntos kkk).</p>
+                <p>Passei um tempo pensando nessa ideia até esse momento, e acredito que pra um presente se tornar mais especial do que ele já possa ser, é quando ele é feito pelas suas próprias mãos para agradar quem você ama, então decidi fazer ele para você minha princesa.</p>
+                <p>Espero que você goste e <span class="destaque-vermelho">Feliz Dia dos Namorados</span> minha <span class="destaque-vermelho">namorada perfeita</span>!</p>
+            </div>
+        </div>
+        <div class="layout-duplo">
+            <div class="lado-esquerdo">
+            </div>
+            <div class="lado-direito">
+                <!-- Insira Elementos Interativos (Cartas, Fotos) aqui -->
+            </div>
+        </div>
+    </div>
+
+    <div class="folha-declaracao">
+        <h2>Nossas memórias meu amor ✨</h2>
+        <p>Cada fotinho será uma recordação pro resto das nossas vidas.</p>
+        
+        <div class="album-container">
+            <div class="album-slider" id="album-slider">
+                <!-- Você pode adicionar quantas fotos quiser aqui -->
+                <div class="album-item"><img src="imagens/RK.jpg" alt="Nossa Foto 1"></div>
+                <div class="album-item"><img src="album-foto2.jpg" alt="Nossa Foto 2"></div>
+                <div class="album-item"><img src="album-foto3.jpg" alt="Nossa Foto 3"></div>
+                <div class="album-item"><img src="album-foto4.jpg" alt="Nossa Foto 4"></div>
+                <div class="album-item"><img src="album-foto5.jpg" alt="Nossa Foto 5"></div>
+                <div class="album-item"><img src="album-foto6.jpg" alt="Nossa Foto 6"></div>
+                <div class="album-item"><img src="album-foto7.jpg" alt="Nossa Foto 7"></div>
+                <div class="album-item"><img src="album-foto8.jpg" alt="Nossa Foto 8"></div>
+                <div class="album-item"><img src="album-foto9.jpg" alt="Nossa Foto 9"></div>
+                <div class="album-item"><img src="album-foto10.jpg" alt="Nossa Foto 10"></div>
+                <div class="album-item"><img src="album-foto11.jpg" alt="Nossa Foto 11"></div>
+                <div class="album-item"><img src="album-foto12.jpg" alt="Nossa Foto 12"></div>
+                <div class="album-item"><img src="album-foto13.jpg" alt="Nossa Foto 13"></div>
+                <div class="album-item"><img src="album-foto14.jpg" alt="Nossa Foto 14"></div>
+                <div class="album-item"><img src="album-foto15.jpg" alt="Nossa Foto 15"></div>
+                <div class="album-item"><img src="album-foto16.jpg" alt="Nossa Foto 16"></div>
+                <div class="album-item"><img src="album-foto17.jpg" alt="Nossa Foto 17"></div>
+                <div class="album-item"><img src="album-foto18.jpg" alt="Nossa Foto 18"></div>
+                <div class="album-item"><img src="album-foto19.jpg" alt="Nossa Foto 19"></div>
+                <div class="album-item"><img src="album-foto20.jpg" alt="Nossa Foto 20"></div>
+            </div>
+            
+            <div class="controles-album">
+                <button class="btn-album" onclick="mudarSlide(-1)">❮</button>
+                <button class="btn-album" onclick="mudarSlide(1)">❯</button>
+            </div>
+        </div>
+
+        <div class="assinatura">Da mesma forma que você está, elas também estarão para sempre no meu ❤️</div>
+    </div>
+
+    <div class="folha-interativa">
+        <h2>Nossa Trilha Sonora & Pensamentos ❤️</h2>
+        
+        <div class="contador-container">
+            <p style="font-size: 2rem;">Esse é nosso tempo juntos vida</p>
+            <span id="dias-contagem">00d 00h 00m 00s</span>
+            <p style="font-size: 2rem;">O que você acha de aumentarmos ainda mais esse tempo ficando comigo pra sempre?</p>
+            <button class="btn-resposta" onclick="mostrarPopup()">Sim! ❤️</button>
+        </div>
+
+        <audio id="player-musica" loop>
+            <source src="audio/Ed Sheeran - Perfect.mp3" type="audio/mpeg">
+            Seu navegador não suporta áudio.
+        </audio>
+        
+        <button id="btn-musica" onclick="toggleMusica()">Tocar Nossa Música 🎵</button>
+
+        <div class="caixa-frases">
+            <p id="frase-dinamica">Carregando um pensamento especial...</p>
+        </div>
+    </div>
+
+    <div class="folha-livro">
+        <div id="conteudo-livro">
+            <div class="livro-slider">
+                <!-- Capa do Livro -->
+                <div class="pagina-interna-livro capa-livro">
+                    <!-- Selo de Foto Superior Esquerdo -->
+                    <div class="selo-foto"> 
+                        <imagem src="imagens/index/RK.jpg" alt="Nossa Foto"> <!-- Você colocará o caminho da foto aqui -->
+                    </div>
+                    <h1>Nossa História</h1>
+                    <p style="font-size: 2.2rem; color: #0984e3;">O início de tudo...</p>
+                    <div class="coracao-capa">❤️</div>
+                </div>
+
+                <!-- Página 1 -->
+                <div class="pagina-interna-livro">
+                    <h2>Encontro com minha alma gêmea ❤️</h2>
+                    <p>A primeira vez que te vi foi através de uma foto de nossa amiga em comum, e quando meus olhos bateram em você, eles se fixaram como os olhos de um artista quando encontram uma vista maravilhosamente linda.</p>
+                    <p>Desde aquele momento, eu sabia que queria você ao meu lado durante o resto da minha vida, porém ainda tinha o desafio de conseguir conquista-la. Foi quando meus pensamentos e criatividades voltaram a milhão para conquistar o coração daquela pessoa que havia roubado o meu sem nem mesmo saber...</p>
+                    <p>E foi então, que nossa história começou. Onde se iniciou toda essa jornada em busca do amor da minha vida.</p>
+                </div>
+
+                <!-- Página 2 -->
+                <div class="pagina-interna-livro">
+                    <h2>Quando os olhos brilham ❤️</h2>
+                    <p>Começamos apenas com um simples "oi", e alguns dias depois nos encontramos pessoalmente pela primeira vez. Quando a encontrei na estação a caminho do shopping, na mesma hora me apaixonei, aquele vestido vermelho e seu lindo rosto... E então, o nervosismo tomou conta do clima total... Ao chegarmos no local combinado, encontramos uma livraria onde paramos pois ela amava livros.</p>
+                    <p>Enquanto estavamos observando as prateleiras, ela contava sobre os livros que gostava, seus olhos brilhavam com um reflexo de luz constante que era indelével. Durante nossa sessão no cinema, o nervosismo se foi e demos as mãos pela primeira vez, onde acabamos criando um forte laço e nos apaixonando.</p>
+                </div>
+
+                <!-- Página 3 -->
+                <div class="pagina-interna-livro">
+                    <h2>Conquistando o amor ❤️</h2>
+                    <p>Durante esse tempo juntos, acabamos nos aproximando muito mais e começamos a nos relacionar românticamente, e passamos a nos divertir juntos em diversos encontros e nos conhecermos cada dia mais.</p>
+                    <p>Ela se tornou a pessoa que mais amo nessa vida e faria de tudo para vê-la sempre feliz, eu a amo e sempre irei amar.</p>
+                    <p>Estou ansioso para as próximas páginas do nosso livro, que iremos escrever juntos a partir de agora.</p>
+                    <div class="assinatura">Com todo o meu amor, para sempre. ❤️</div>
+                </div>
+
+                <!-- 14 Páginas com a pergunta centralizada -->
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p>Vamos escrever o restante da nossa história juntos?</p>
+                </div>
+
+                <!-- Página Final (A 15ª nova página) -->
+                <div class="pagina-interna-livro pagina-centralizada">
+                    <p style="font-size: 2.2rem !important; color: #34495e;">Você veio até a página final? Mas saiba que esse livro não terá um final porque nossa história não terá um fim.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controles-album" style="position: relative; top: auto; transform: none; margin-top: 10px; padding: 20px; pointer-events: auto; justify-content: center; gap: 30px;">
+            <button class="btn-album" onclick="mudarPaginaLivro(-1)">❮</button>
+            <span id="indicador-livro" style="font-size: 1.6rem; color: #636e72; font-family: 'Caveat', cursive;">1 / 19</span>
+            <button class="btn-album" onclick="mudarPaginaLivro(1)">❯</button>
+        </div>
+    </div>
+
+    <!-- Quinta Folha: Texto Declarativo -->
+    <div class="folha-texto-final">
+        <!-- Ornamentos nos cantos -->
+        <div class="detalhe-decorativo" style="top: 20px; right: 20px; transform: rotate(15deg);">🌸</div>
+        <div class="detalhe-decorativo" style="bottom: 40px; left: -10px; transform: rotate(-15deg);">✨</div>
+        <div class="detalhe-decorativo" style="top: 50%; right: -25px; font-size: 2rem;">💖</div>
+
+        <h2>Minha declaração</h2>
+        <p>Oi meu amor, lembro que no dia em que pedi sua mão, não me declarei completamente por conta do nervosismo, mas não vou cometer o mesmo erro duas vezes.</p>
+        <p>Desde o nosso primeiro encontro você ficou na minha mente, seja seu lindo sorriso, seus lindos olhinhos brilhantes apaixonantes, cada detalhezinho seu, porém, com o passar do tempo você acabou dominando não só a minha mente, mas meu coração também (já roubou minha mente e meu coração meu amor kkk).</p>
+        <p>Criamos muitas memórias juntos em tão pouco tempo, e espero que possamos criar muitas outras meu amor, quero criar um futuro com você, com a minha pessoa preferida que eu escolhi para caminhar ao meu lado nessa trajetória da vida. Espero que você também queira isso... Saiba que eu vou sempre te amar seja nessa vida ou na próxima, você sempre será o amor da minha vida, a pessoa pela qual me apaixonei e decidi me entregar por completo.</p>
+        <div class="assinatura-final">Eu te amo meu amor do fundo do meu coraçãozinho que você roubou.</div>
+    </div>
+
+    <!-- Estrutura do Popup -->
+    <div id="popup-amor" class="popup-overlay" onclick="fecharPopup()">
+        <div class="popup-card" onclick="event.stopPropagation()">
+            <div style="font-size: 5rem; margin-bottom: 10px;">💖</div>
+            <h2 style="font-size: 3.5rem; color: #d63031; margin-bottom: 15px;">Sabia que você aceitaria meu amor, eu te amo minha princesa</h2>
+            <button class="btn-resposta" onclick="fecharPopup()">Que quinge kkk ❤️</button>
+        </div>
+    </div>
+
+    <script>
+        let tentativasErro = 0;
+        function verificarSenha() {
+            const input = document.getElementById('password-input');
+            const erro = document.getElementById('msg-erro');
+            const dica = document.getElementById('msg-dica');
+            const overlay = document.getElementById('password-overlay');
+            
+            if (input.value === "14/02") {
+                overlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                
+                // Dispara a animação do livro abrindo
+                setTimeout(() => document.querySelector('.folha-livro').classList.add('aberto'), 500);
+            } else {
+                tentativasErro++;
+                erro.style.display = 'block';
+                input.value = "";
+
+                if (tentativasErro >= 3) {
+                    dica.style.display = 'block';
+                }
+            }
+        }
+
+        // Permite pressionar Enter para entrar
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                verificarSenha();
+            }
+        });
+
+        let slideAtual = 0;
+        function mudarSlide(direcao) {
+            const slider = document.getElementById('album-slider');
+            const totalSlides = document.querySelectorAll('.album-item').length;
+            
+            slideAtual += direcao;
+            
+            if (slideAtual >= totalSlides) slideAtual = 0;
+            if (slideAtual < 0) slideAtual = totalSlides - 1;
+            
+            slider.style.transform = `translateX(-${slideAtual * 100}%)`;
+        }
+
+        // --- Lógica da Música ---
+        function toggleMusica() {
+            const audio = document.getElementById('player-musica');
+            const btn = document.getElementById('btn-musica');
+            
+            if (audio.paused) {
+                audio.play();
+                btn.innerText = "Pausar Música ⏸️";
+            } else {
+                audio.pause();
+                btn.innerText = "Tocar Nossa Música 🎵";
+            }
+        }
+
+        // --- Lógica das Frases Automáticas ---
+        const frasesAmor = [
+            "Amo cada detalhe seu minha princesa.",
+            "Qualquer lugar é meu lugar favorito quando você está comigo.",
+            "Obrigado por ser a minha melhor companhia.",
+            "Eu escolheria você mil vezes, em mil vidas diferentes.",
+            "Você é a razão dos meus sorrisos mais sinceros da minha vida.",
+            "Com você, até o silêncio é perfeito.",
+            "Você é o amor da minha vida e eu te amo muitão meu amor."
+        ];
+
+        let indiceFrase = 0;
+        function atualizarFrase() {
+            const el = document.getElementById('frase-dinamica');
+            el.style.opacity = 0;
+            
+            setTimeout(() => {
+                el.innerText = frasesAmor[indiceFrase];
+                el.style.opacity = 1;
+                indiceFrase = (indiceFrase + 1) % frasesAmor.length;
+            }, 800);
+        }
+
+        // Inicia a troca de frases a cada 5 segundos
+        setInterval(atualizarFrase, 5000);
+        atualizarFrase(); // Primeira execução
+
+        // --- Lógica de Folhear o Livro ---
+        let indexLivro = 0;
+        function mudarPaginaLivro(n) {
+            const paginas = document.querySelectorAll('.pagina-interna-livro');
+            const slider = document.querySelector('.livro-slider');
+            
+            indexLivro += n;
+            if (indexLivro >= paginas.length) indexLivro = 0;
+            if (indexLivro < 0) indexLivro = paginas.length - 1;
+            
+            // Cálculo que leva em conta o GAP de 60px para manter as páginas separadas no slide
+            slider.style.transform = `translateX(calc(-${indexLivro} * (100% + 60px)))`;
+            
+            document.getElementById('indicador-livro').innerText = (indexLivro + 1) + " / " + paginas.length;
+        }
+
+        // --- Lógica do Timer de Tempo Real ---
+        function atualizarTimer() {
+            const dataInicio = new Date(2026, 0, 31, 0, 0, 0); // 31/01/2026 às 00:00
+            const agora = new Date();
+            const diff = agora - dataInicio;
+
+            if (diff < 0) {
+                document.getElementById('dias-contagem').innerText = "00d 00h 00m 00s";
+                return;
+            }
+
+            const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const pad = (n) => n.toString().padStart(2, '0');
+
+            document.getElementById('dias-contagem').innerText = 
+                `${dias}d ${pad(horas)}h ${pad(minutos)}m ${pad(segundos)}s`;
+        }
+        setInterval(atualizarTimer, 1000);
+        atualizarTimer();
+
+        // --- Funções do Popup ---
+        function mostrarPopup() {
+            document.getElementById('popup-amor').classList.add('active');
+        }
+        function fecharPopup() {
+            document.getElementById('popup-amor').classList.remove('active');
+        }
+
+    </script>
+</body>
+</html>
