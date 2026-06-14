@@ -678,18 +678,20 @@
 
         /* Dispositivos Móveis (Celulares) */
         @media (max-width: 768px) {
-            body { padding: 20px 10px; gap: 30px; }
+            body { padding: 20px 15px; gap: 30px; }
 
             /* Remove ou suaviza rotações para evitar overflow horizontal */
             .folha-caderno, .folha-declaracao, .folha-interativa, .folha-livro, .folha-texto-final {
                 transform: rotate(0deg) !important;
                 width: 100%;
+                max-width: 100%;
                 padding: 30px 20px;
+                min-height: auto;
             }
 
             /* Ajuste do Cabeçalho e Títulos */
-            .cabecalho-centro h1 { font-size: 2.8rem; }
-            .cabecalho-centro p { font-size: 1.6rem; }
+            .cabecalho-centro h1 { font-size: 2.5rem; }
+            .cabecalho-centro p { font-size: 1.4rem; }
             .texto-intro { font-size: 1.4rem; }
 
             /* Layout de colunas para empilhamento */
@@ -698,26 +700,42 @@
                 border-bottom: 3px dashed #b2bec3; 
                 padding-right: 0; 
                 padding-bottom: 30px; 
+                margin-bottom: 20px;
                 text-align: center;
                 align-items: center;
             }
             .lado-esquerdo h1 { font-size: 2.5rem; }
+            .lado-esquerdo p { font-size: 1.4rem; }
 
             /* Ajuste do Álbum e Livro */
-            .album-item { height: 280px; }
-            .pagina-interna-livro { padding: 40px 20px; min-height: 450px; }
-            .folha-livro h2 { font-size: 2.2rem; }
-            .folha-livro p, .folha-declaracao p, .folha-texto-final p { font-size: 1.5rem; text-indent: 20px; }
+            .album-item { height: 250px; }
+            .album-container { margin: 15px 0; }
+            
+            .folha-livro { margin-top: 10px; }
+            .livro-slider { gap: 20px; } /* Menor espaço entre páginas no mobile */
+            .pagina-interna-livro { padding: 40px 15px; min-height: 400px; }
+            .capa-livro h1 { font-size: 3rem !important; }
+            .folha-livro h2 { font-size: 2rem; }
+            .folha-livro p, .folha-declaracao p, .folha-texto-final p { font-size: 1.4rem; text-indent: 15px; }
+            .pagina-centralizada p { font-size: 1.8rem !important; }
+            .selo-foto { width: 60px; height: 60px; left: 10px; top: 10px; }
             
             /* Contador de tempo */
-            #dias-contagem { font-size: 2.2rem; }
+            #dias-contagem { font-size: 1.8rem; }
+            .contador-container p { font-size: 1.5rem !important; }
             
             /* Tela de Senha */
             .password-box { padding: 25px; }
-            .password-box h2 { font-size: 2.2rem; }
-            .password-box input { font-size: 1.6rem; }
+            .password-box h2 { font-size: 2rem; }
+            .password-box p { font-size: 1.4rem !important; }
+            .password-box input { font-size: 1.5rem; }
             
-            .assinatura, .assinatura-final { font-size: 1.8rem; text-align: center; }
+            .assinatura, .assinatura-final { font-size: 1.6rem; text-align: center; margin-top: 20px; }
+            
+            /* Ajuste na folha final */
+            .folha-texto-final { border-left: 10px solid transparent; padding: 40px 15px; }
+            .folha-texto-final h2 { font-size: 2.5rem; }
+            .detalhe-decorativo { font-size: 2rem; }
         }
     </style>
 </head>
@@ -839,7 +857,7 @@
                 <div class="pagina-interna-livro capa-livro">
                     <!-- Selo de Foto Superior Esquerdo -->
                     <div class="selo-foto"> 
-                        <imagem src="imagens/Selo.jpg" alt="Nossa Foto"> <!-- Você colocará o caminho da foto aqui -->
+                        <img src="imagens/Selo.jpg" alt="Nossa Foto"> <!-- Você colocará o caminho da foto aqui -->
                     </div>
                     <h1>Nossa História</h1>
                     <p style="font-size: 2.2rem; color: #0984e3;">O início de tudo...</p>
@@ -1047,8 +1065,9 @@
             if (indexLivro >= paginas.length) indexLivro = 0;
             if (indexLivro < 0) indexLivro = paginas.length - 1;
             
-            // Cálculo que leva em conta o GAP de 60px para manter as páginas separadas no slide
-            slider.style.transform = `translateX(calc(-${indexLivro} * (100% + 60px)))`;
+            // Detecta o gap dinamicamente para manter a proporção
+            const gap = window.matchMedia("(max-width: 768px)").matches ? 20 : 60;
+            slider.style.transform = `translateX(calc(-${indexLivro} * (100% + ${gap}px)))`;
             
             document.getElementById('indicador-livro').innerText = (indexLivro + 1) + " / " + paginas.length;
         }
